@@ -101,11 +101,7 @@ def load_data(conn):
         columns=[
             'id',
             'item_name',
-            'price',
-            'units_sold',
             'units_left',
-            'cost_price',
-            'reorder_point',
             'description',
         ])
 
@@ -130,11 +126,7 @@ def update_data(conn, df, changes):
             UPDATE inventory
             SET
                 item_name = :item_name,
-                price = :price,
-                units_sold = :units_sold,
                 units_left = :units_left,
-                cost_price = :cost_price,
-                reorder_point = :reorder_point,
                 description = :description
             WHERE id = :id
             ''',
@@ -145,9 +137,9 @@ def update_data(conn, df, changes):
         cursor.executemany(
             '''
             INSERT INTO inventory
-                (id, item_name, price, units_sold, units_left, cost_price, reorder_point, description)
+                (id, item_name, units_left, description)
             VALUES
-                (:id, :item_name, :price, :units_sold, :units_left, :cost_price, :reorder_point, :description)
+                (:id, item_name, units_left, description)
             ''',
             (defaultdict(lambda: None, row) for row in changes['added_rows']),
         )
@@ -209,24 +201,3 @@ st.button(
     # Update data in database
     on_click=update_data,
     args=(conn, df, st.session_state.inventory_table))
-
-
-# -----------------------------------------------------------------------------
-# Now some cool charts
-
-# Add some space
-''
-''
-''
-
-st.subheader('Units left', divider='red')
-
-need_to_reorder = df[df['units_left'] < df['reorder_point']].loc[:, 'item_name']
-
-if len(need_to_reorder) > 0:
-    items = '\n'.join(f'* {name}' for name in need_to_reorder)
-
-    st.error(f"We're running dangerously low on the items below:\n {items}")
-
-''
-''
