@@ -38,8 +38,6 @@ def initialize_data(conn):
         CREATE TABLE IF NOT EXISTS inventory (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             item_name TEXT,
-            price REAL,
-            units_sold INTEGER,
             units_left INTEGER,
             cost_price REAL,
             reorder_point INTEGER,
@@ -232,50 +230,3 @@ if len(need_to_reorder) > 0:
 
 ''
 ''
-
-st.altair_chart(
-    # Layer 1: Bar chart.
-    alt.Chart(df)
-        .mark_bar(
-            orient='horizontal',
-        )
-        .encode(
-            x='units_left',
-            y='item_name',
-        )
-    # Layer 2: Chart showing the reorder point.
-    + alt.Chart(df)
-        .mark_point(
-            shape='diamond',
-            filled=True,
-            size=50,
-            color='salmon',
-            opacity=1,
-        )
-        .encode(
-            x='reorder_point',
-            y='item_name',
-        )
-    ,
-    use_container_width=True)
-
-st.caption('NOTE: The :diamonds: location shows the reorder point.')
-
-''
-''
-''
-
-# -----------------------------------------------------------------------------
-
-st.subheader('Best sellers', divider='orange')
-
-''
-''
-
-st.altair_chart(alt.Chart(df)
-    .mark_bar(orient='horizontal')
-    .encode(
-        x='units_sold',
-        y=alt.Y('item_name').sort('-x'),
-    ),
-    use_container_width=True)
