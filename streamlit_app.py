@@ -10,7 +10,6 @@ import pandas as pd
 # Set the title and favicon that appear in the Browser's tab bar.
 st.set_page_config(
     page_title='Inventory tracker',
-    page_icon=':shopping_bags:', # This is an emoji shortcode. Could be a URL too.
 )
 
 
@@ -49,7 +48,7 @@ def initialize_data(conn):
     cursor.execute(
         '''
         INSERT INTO inventory
-            (item_name, price, units_sold, units_left, cost_price, reorder_point, description)
+            (item_name, units_left, description)
         VALUES
             -- Beverages
             ('Bottled Water (500ml)', 1.50, 115, 15, 0.80, 16, 'Hydrating bottled water'),
